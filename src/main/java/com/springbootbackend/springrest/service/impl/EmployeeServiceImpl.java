@@ -1,7 +1,6 @@
 package com.springbootbackend.springrest.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -46,6 +45,36 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         return employeeRepository.findById(id).orElseThrow(()->
                                     new ResourceNotFoundException("Employee","Id",id));
+    }
+
+
+
+    @Override
+    public Employee updatEmployee(Employee employee, long id) {
+        // Check if employee exist in database
+        Employee existingEmployee = employeeRepository.findById(id).orElseThrow(
+            ()->new ResourceNotFoundException("Employee", "Id", id));
+
+        existingEmployee.setFirstName(employee.getFirstName());
+        existingEmployee.setLastName(employee.getLastName());
+        existingEmployee.setEmail(employee.getEmail());
+        
+        //Save to database
+        employeeRepository.save(existingEmployee);
+
+        return existingEmployee;
+    }
+
+
+
+    @Override
+    public void deletEmployee(long id) {
+        // Check wether a employee exist 
+        employeeRepository.findById(id).orElseThrow(
+            ()->new ResourceNotFoundException("Employee", "id", id)
+        );
+        employeeRepository.deleteById(id);
+        
     }
     
     
